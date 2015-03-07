@@ -52,7 +52,6 @@ public class Transpor_Arff {
                         salvaLinhaDados(newFile, dado.toString());
                         break;
                     }
-
                 }
                 br.close();
                 fr.close();
