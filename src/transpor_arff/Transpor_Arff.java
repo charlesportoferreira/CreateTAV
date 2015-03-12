@@ -33,7 +33,7 @@ public class Transpor_Arff {
 
         try {
             ta.transpor("resultadoPretext.arff", "teste.arff");
-        } catch (IOException ex) {
+        } catch (IOException ex) { 
             Logger.getLogger(Transpor_Arff.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
