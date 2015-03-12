@@ -42,7 +42,7 @@ public class Transpor_Arff {
         createHeader(oldFile, newFile);
         String linha;
         int numeroColunas = getNumeroColunas(oldFile);
-        for (int i = 0; i < numeroColunas; i++) {
+        for (int i = 0; i < numeroColunas-1; i++) {
             StringBuilder dado = new StringBuilder();
             try (FileReader fr = new FileReader(oldFile); BufferedReader br = new BufferedReader(fr)) {
                 while (br.ready()) {
