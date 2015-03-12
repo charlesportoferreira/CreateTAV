@@ -41,6 +41,7 @@ public class Transpor_Arff {
     public void transpor(String oldFile, String newFile) throws FileNotFoundException, IOException {
         createHeader(oldFile, newFile);
         String linha;
+        int porcentagem = 0;
         int numeroColunas = getNumeroColunas(oldFile);
         for (int i = 0; i < numeroColunas; i++) {
             StringBuilder dado = new StringBuilder();
@@ -61,9 +62,11 @@ public class Transpor_Arff {
                             dado.append(",").append(linha.split(",")[i]);
                         }
                         //dado.append("\n");
-                        if(i == numeroColunas-1){
+                        if (i == numeroColunas - 1) {
                             salvaLinhaDados("classes.txt", dado.toString());
                         }
+                        porcentagem = (100 * i) / numeroColunas;
+                        System.out.print("\r" + porcentagem + "%");
                         salvaLinhaDados(newFile, dado.toString());
                         break;
                     }
@@ -93,7 +96,7 @@ public class Transpor_Arff {
                     linha = br.readLine();
                     if (linha.length() < 2) {
                         linha = br.readLine();
-                        
+
                     }
                     dados = linha.split(",");
                     return dados.length;
