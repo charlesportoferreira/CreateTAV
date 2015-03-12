@@ -25,8 +25,14 @@ public class Transpor_Arff {
      */
     public static void main(String[] args) {
         Transpor_Arff ta = new Transpor_Arff();
+        if (args.length < 2) {
+            // System.out.println("args[0] = oldFile args[1] = newFile");
+            //args[0]= "iris.arff";
+            //args[1]= "teste.arff";
+        }
+
         try {
-            ta.transpor("iris2.arff", "iristeste.arff");
+            ta.transpor("resultadoPretext.arff", "teste.arff");
         } catch (IOException ex) {
             Logger.getLogger(Transpor_Arff.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -43,9 +49,15 @@ public class Transpor_Arff {
                     linha = br.readLine();
                     if (linha.contains("@DATA")) {
                         linha = br.readLine();
+                        if (linha.length() < 2) {
+                            linha = br.readLine();
+                        }
                         dado.append(linha.split(",")[i]);
                         while (br.ready()) {
                             linha = br.readLine();
+                            if (linha.length() < 2) {
+                                break;
+                            }
                             dado.append(",").append(linha.split(",")[i]);
                         }
                         //dado.append("\n");
@@ -76,6 +88,10 @@ public class Transpor_Arff {
                 linha = br.readLine();
                 if (linha.contains("@DATA")) {
                     linha = br.readLine();
+                    if (linha.length() < 2) {
+                        linha = br.readLine();
+                        
+                    }
                     dados = linha.split(",");
                     return dados.length;
                 }
@@ -102,11 +118,19 @@ public class Transpor_Arff {
 
     private int getNumeroLinhas(String oldFile) throws FileNotFoundException, IOException {
         int contador = 0;
+        String linha = "";
         try (FileReader fr = new FileReader(oldFile); BufferedReader br = new BufferedReader(fr)) {
             while (br.ready()) {
                 if (br.readLine().contains("@DATA")) {
+                    linha = br.readLine();
+                    if (linha.length() > 2) {
+                        contador++;
+                    }
                     while (br.ready()) {
-                        br.readLine();
+                        linha = br.readLine();
+                        if (linha.length() < 2) {
+                            break;
+                        }
                         contador++;
                     }
                 }
