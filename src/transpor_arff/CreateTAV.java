@@ -67,7 +67,7 @@ public class CreateTAV {
     }
 
     public static void help() {
-        System.out.println("Faltou argumentos passar 3 argumentos:");
+        System.out.println("Faltou arumentos: Passe 3 argumentos:");
         System.out.println("-l sourceFile targetFile");
         System.out.println("-u sourceFile targetFile");
         System.out.println("-c sourceFile targetFile");
