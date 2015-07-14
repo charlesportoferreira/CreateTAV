@@ -156,29 +156,6 @@ public class CreateTAV {
         salvaLinhaDados(newFile, sb.toString());
     }
 
-    private int getNumeroLinhas(String oldFile) throws FileNotFoundException, IOException {
-        int contador = 0;
-        String linha;
-        try (FileReader fr = new FileReader(oldFile); BufferedReader br = new BufferedReader(fr)) {
-            while (br.ready()) {
-                if (br.readLine().contains("@DATA")) {
-                    linha = br.readLine();
-                    if (linha.length() > 2) {
-                        contador++;
-                    }
-                    while (br.ready()) {
-                        linha = br.readLine();
-                        if (linha.length() < 2) {
-                            break;
-                        }
-                        contador++;
-                    }
-                }
-            }
-            br.close();
-            fr.close();
-        }
-        return contador;
-    }
+   
 
 }
