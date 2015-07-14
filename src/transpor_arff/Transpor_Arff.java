@@ -11,6 +11,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,15 +29,49 @@ public class Transpor_Arff {
      */
     public static void main(String[] args) {
         Transpor_Arff ta = new Transpor_Arff();
-        if (args.length < 2) {
-            
-        }
 
-        try {
-            ta.transpor("teste3.txt", "teste4.arff");
-        } catch (IOException ex) {
-            Logger.getLogger(Transpor_Arff.class.getName()).log(Level.SEVERE, null, ex);
+        List<String> argumentos = new ArrayList<>(Arrays.asList(args));
+        if (argumentos.isEmpty()) {
+            help();
         }
+        Iterator itr = argumentos.iterator();
+        while (itr.hasNext()) {
+            String argumento = (String) itr.next();
+            switch (argumento) {
+                case "-l":
+                    try {
+                        ta.limpaDados((String) itr.next(), (String) itr.next());
+                    } catch (IOException ex) {
+                        Logger.getLogger(Transpor_Arff.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+
+                case "-u":
+                    try {
+                        ta.transpor((String) itr.next(), (String) itr.next());
+                    } catch (IOException ex) {
+                        Logger.getLogger(Transpor_Arff.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+
+                case "-c":
+                    try {
+                        ta.getClasses((String) itr.next(), (String) itr.next());
+                    } catch (IOException ex) {
+                        Logger.getLogger(Transpor_Arff.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+
+            }
+        }
+    }
+
+    public static void help() {
+        System.out.println("Faltou argumentos passar 3 argumentos:");
+        System.out.println("-l sourceFile targetFile");
+        System.out.println("-u sourceFile targetFile");
+        System.out.println("-c sourceFile targetFile");
+        System.exit(0);
     }
 
     public void transpor(String oldFile, String newFile) throws FileNotFoundException, IOException {
@@ -42,8 +80,37 @@ public class Transpor_Arff {
         try (FileReader fr = new FileReader(oldFile); BufferedReader br = new BufferedReader(fr)) {
             while (br.ready()) {
                 linha = br.readLine();
-//                        porcentagem = (100 * i) / numeroColunas;
-//                        System.out.print("\r" + porcentagem + "%");
+                salvaLinhaDados(newFile, linha);
+            }
+            br.close();
+            fr.close();
+        }
+    }
+
+    public void getClasses(String sourceFile, String targetFile) throws FileNotFoundException, IOException {
+        String linha;
+        try (FileReader fr = new FileReader(sourceFile); BufferedReader br = new BufferedReader(fr)) {
+            while (br.ready()) {
+                linha = br.readLine();
+                if (linha.contains("att_class:")) {
+                    linha = linha.substring(linha.lastIndexOf("(") + 1, linha.lastIndexOf(")")).replaceAll("\"", "");
+                    String classes = "@ATTRIBUTE classe {" + linha + "}";
+                    salvaLinhaDados(targetFile, classes);
+                    break;
+                }
+            }
+            br.close();
+            fr.close();
+        }
+    }
+
+    public void limpaDados(String oldFile, String newFile) throws FileNotFoundException, IOException {
+        String linha;
+        try (FileReader fr = new FileReader(oldFile); BufferedReader br = new BufferedReader(fr)) {
+            while (br.ready()) {
+                linha = br.readLine();
+                linha = linha.replaceAll("\".*\",|", "");
+                linha = linha.substring(0, linha.lastIndexOf(","));
                 salvaLinhaDados(newFile, linha);
             }
             br.close();
@@ -86,9 +153,9 @@ public class Transpor_Arff {
         salvaLinhaDados(newFile, sb.toString());
     }
 
-    private int getNume(String oldFile) throws FileNotFoundException, IOException {
+    private int getNumeroLinhas(String oldFile) throws FileNotFoundException, IOException {
         int contador = 0;
-        String linha = "";
+        String linha;
         try (FileReader fr = new FileReader(oldFile); BufferedReader br = new BufferedReader(fr)) {
             while (br.ready()) {
                 if (br.readLine().contains("@DATA")) {
