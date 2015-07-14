@@ -48,7 +48,7 @@ public class Transpor_Arff {
 
                 case "-u":
                     try {
-                        ta.transpor((String) itr.next(), (String) itr.next());
+                        ta.unirDados((String) itr.next(), (String) itr.next());
                     } catch (IOException ex) {
                         Logger.getLogger(Transpor_Arff.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -74,7 +74,7 @@ public class Transpor_Arff {
         System.exit(0);
     }
 
-    public void transpor(String oldFile, String newFile) throws FileNotFoundException, IOException {
+    public void unirDados(String oldFile, String newFile) throws FileNotFoundException, IOException {
         createHeader(oldFile, newFile);
         String linha;
         try (FileReader fr = new FileReader(oldFile); BufferedReader br = new BufferedReader(fr)) {
@@ -106,13 +106,16 @@ public class Transpor_Arff {
 
     public void limpaDados(String oldFile, String newFile) throws FileNotFoundException, IOException {
         String linha;
+        String classe = "";
         try (FileReader fr = new FileReader(oldFile); BufferedReader br = new BufferedReader(fr)) {
             while (br.ready()) {
                 linha = br.readLine();
+                classe += linha.substring(linha.lastIndexOf(",") + 1, linha.length()) + ",";
                 linha = linha.replaceAll("\".*\",|", "");
                 linha = linha.substring(0, linha.lastIndexOf(","));
                 salvaLinhaDados(newFile, linha);
             }
+            salvaLinhaDados("classesAtributos.txt", classe);
             br.close();
             fr.close();
         }
