@@ -26,14 +26,12 @@ public class Transpor_Arff {
     public static void main(String[] args) {
         Transpor_Arff ta = new Transpor_Arff();
         if (args.length < 2) {
-            // System.out.println("args[0] = oldFile args[1] = newFile");
-            //args[0]= "iris.arff";
-            //args[1]= "teste.arff";
+            
         }
 
         try {
-            ta.transpor("resultadoPretext.arff", "teste.arff");
-        } catch (IOException ex) { 
+            ta.transpor("teste3.txt", "teste4.arff");
+        } catch (IOException ex) {
             Logger.getLogger(Transpor_Arff.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -41,39 +39,15 @@ public class Transpor_Arff {
     public void transpor(String oldFile, String newFile) throws FileNotFoundException, IOException {
         createHeader(oldFile, newFile);
         String linha;
-        int porcentagem = 0;
-        int numeroColunas = getNumeroColunas(oldFile);
-        for (int i = 0; i < numeroColunas; i++) {
-            StringBuilder dado = new StringBuilder();
-            try (FileReader fr = new FileReader(oldFile); BufferedReader br = new BufferedReader(fr)) {
-                while (br.ready()) {
-                    linha = br.readLine();
-                    if (linha.contains("@DATA")) {
-                        linha = br.readLine();
-                        if (linha.length() < 2) {
-                            linha = br.readLine();
-                        }
-                        dado.append(linha.split(",")[i]);
-                        while (br.ready()) {
-                            linha = br.readLine();
-                            if (linha.length() < 2) {
-                                break;
-                            }
-                            dado.append(",").append(linha.split(",")[i]);
-                        }
-                        //dado.append("\n");
-                        if (i == numeroColunas - 1) {
-                            salvaLinhaDados("classes.txt", dado.toString());
-                        }
-                        porcentagem = (100 * i) / numeroColunas;
-                        System.out.print("\r" + porcentagem + "%");
-                        salvaLinhaDados(newFile, dado.toString());
-                        break;
-                    }
-                }
-                br.close();
-                fr.close();
+        try (FileReader fr = new FileReader(oldFile); BufferedReader br = new BufferedReader(fr)) {
+            while (br.ready()) {
+                linha = br.readLine();
+//                        porcentagem = (100 * i) / numeroColunas;
+//                        System.out.print("\r" + porcentagem + "%");
+                salvaLinhaDados(newFile, linha);
             }
+            br.close();
+            fr.close();
         }
     }
 
@@ -90,29 +64,19 @@ public class Transpor_Arff {
         String linha;
         String[] dados;
         try (FileReader fr = new FileReader(oldFile); BufferedReader br = new BufferedReader(fr)) {
-            while (br.ready()) {
-                linha = br.readLine();
-                if (linha.contains("@DATA")) {
-                    linha = br.readLine();
-                    if (linha.length() < 2) {
-                        linha = br.readLine();
-
-                    }
-                    dados = linha.split(",");
-                    return dados.length;
-                }
-            }
+            linha = br.readLine();
+            dados = linha.split(",");
             br.close();
             fr.close();
+            return dados.length;
         }
-        return 0;
     }
 
     private void createHeader(String oldFile, String newFile) throws IOException {
-        int numeroLinhas = getNumeroLinhas(oldFile);
+        int colunas = getNumeroColunas(oldFile);
         StringBuilder sb = new StringBuilder();
-        sb.append("@RELATION teste").append("\n\n");
-        for (int i = 0; i < numeroLinhas; i++) {
+        sb.append("@RELATION tabelaInvertida").append("\n\n");
+        for (int i = 0; i < colunas; i++) {
             sb.append("@ATTRIBUTE ");
             sb.append("K").append(i);
             sb.append("	REAL\n");
@@ -122,7 +86,7 @@ public class Transpor_Arff {
         salvaLinhaDados(newFile, sb.toString());
     }
 
-    private int getNumeroLinhas(String oldFile) throws FileNotFoundException, IOException {
+    private int getNume(String oldFile) throws FileNotFoundException, IOException {
         int contador = 0;
         String linha = "";
         try (FileReader fr = new FileReader(oldFile); BufferedReader br = new BufferedReader(fr)) {
