@@ -22,13 +22,13 @@ import java.util.logging.Logger;
  *
  * @author charleshenriqueportoferreira
  */
-public class Transpor_Arff {
+public class CreateTAV {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Transpor_Arff ta = new Transpor_Arff();
+        CreateTAV ta = new CreateTAV();
 
         List<String> argumentos = new ArrayList<>(Arrays.asList(args));
         if (argumentos.isEmpty()) {
@@ -42,7 +42,7 @@ public class Transpor_Arff {
                     try {
                         ta.limpaDados((String) itr.next(), (String) itr.next());
                     } catch (IOException ex) {
-                        Logger.getLogger(Transpor_Arff.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(CreateTAV.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
 
@@ -50,7 +50,7 @@ public class Transpor_Arff {
                     try {
                         ta.unirDados((String) itr.next(), (String) itr.next());
                     } catch (IOException ex) {
-                        Logger.getLogger(Transpor_Arff.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(CreateTAV.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
 
@@ -58,7 +58,7 @@ public class Transpor_Arff {
                     try {
                         ta.getClasses((String) itr.next(), (String) itr.next());
                     } catch (IOException ex) {
-                        Logger.getLogger(Transpor_Arff.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(CreateTAV.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
 
