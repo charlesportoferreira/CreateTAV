@@ -143,7 +143,7 @@ public class CreateTAV {
     }
 
     private void createHeader(String oldFile, String newFile) throws IOException {
-        int colunas = getNumeroColunas(oldFile);
+        int colunas = getNumeroColunas("Tdiscover.txt");
         StringBuilder sb = new StringBuilder();
         sb.append("@RELATION tabelaInvertida").append("\n\n");
         for (int i = 0; i < colunas; i++) {
