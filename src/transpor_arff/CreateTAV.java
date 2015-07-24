@@ -62,6 +62,14 @@ public class CreateTAV {
                     }
                     break;
 
+                case "-r":
+                    try {
+                        ta.reduzArff((String) itr.next(), (String) itr.next());
+                    } catch (IOException ex) {
+                        Logger.getLogger(CreateTAV.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+
             }
         }
     }
@@ -71,6 +79,7 @@ public class CreateTAV {
         System.out.println("-l sourceFile targetFile");
         System.out.println("-u sourceFile targetFile");
         System.out.println("-c sourceFile targetFile");
+        System.out.println("-r sourceFile targetFile");
         System.exit(0);
     }
 
@@ -156,6 +165,32 @@ public class CreateTAV {
         salvaLinhaDados(newFile, sb.toString());
     }
 
-   
+    public void reduzArff(String oldFile, String newFile) throws FileNotFoundException, IOException {
+        String linha;
+        double valorLido;
+        try (FileReader fr = new FileReader(oldFile); BufferedReader br = new BufferedReader(fr)) {
+            while (br.ready()) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("{");
+                linha = br.readLine();
+                linha = linha.replaceAll("\".*\",|", "");
+                String[] dados = linha.split(",");
+                for (int i = 0; i < dados.length; i++) {
+                    valorLido = Double.parseDouble(dados[i]);
+                    if (valorLido > 0) {
+                        sb.append(i).append(" ").append(dados[i]).append(",");
+                    }
+                }
+                if ("{".equals(String.valueOf(sb.charAt(sb.length() - 1)))) {
+                    sb.append("}");
+                } else {
+                    sb.replace(sb.lastIndexOf(","), sb.lastIndexOf(",") + 1, "}");
+                }
+                salvaLinhaDados(newFile, sb.toString());
+            }
+            br.close();
+            fr.close();
+        }
+    }
 
 }
