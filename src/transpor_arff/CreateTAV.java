@@ -96,8 +96,9 @@ public class CreateTAV {
         }
     }
 
-    public void getClasses(String sourceFile, String targetFile) throws FileNotFoundException, IOException {
+    public int getClasses(String sourceFile, String targetFile) throws FileNotFoundException, IOException {
         String linha;
+        int count = 0;
         try (FileReader fr = new FileReader(sourceFile); BufferedReader br = new BufferedReader(fr)) {
             while (br.ready()) {
                 linha = br.readLine();
@@ -107,10 +108,15 @@ public class CreateTAV {
                     salvaLinhaDados(targetFile, classes);
                     break;
                 }
+                if (linha.contains("real.")) {
+                    count++;
+                }
+
             }
             br.close();
             fr.close();
         }
+        return count;
     }
 
     public void limpaDados(String oldFile, String newFile) throws FileNotFoundException, IOException {
@@ -176,9 +182,13 @@ public class CreateTAV {
                 linha = linha.replaceAll("\".*\",|", "");
                 String[] dados = linha.split(",");
                 for (int i = 0; i < dados.length; i++) {
-                    valorLido = Double.parseDouble(dados[i]);
-                    if (valorLido > 0) {
-                        sb.append(i).append(" ").append(dados[i]).append(",");
+                    try {
+                        valorLido = Double.parseDouble(dados[i]);
+                        if (valorLido > 0) {
+                            sb.append(i).append(" ").append(dados[i]).append(",");
+                        }
+                    } catch (NumberFormatException ex) {
+                        System.out.println("dados[i],1,linha" + dados[i] + " " + i + " " + linha);
                     }
                 }
                 if ("{".equals(String.valueOf(sb.charAt(sb.length() - 1)))) {
